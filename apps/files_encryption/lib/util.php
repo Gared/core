@@ -1398,7 +1398,7 @@ class Util {
 	 * @param string $dir relative to the users files folder
 	 * @return array with list of files relative to the users files folder
 	 */
-	public function getAllFiles($dir) {
+	public function getAllFiles($dir, $mountPoint = '') {
 		$result = array();
 		$dirList = array($dir);
 
@@ -1408,10 +1408,13 @@ class Util {
 					$this->userFilesDir . '/' . $dir));
 
 			foreach ($content as $c) {
+				// getDirectoryContent() returns the paths relative to the mount points, so we need
+				// to re-construct the complete path
+				$path = ($mountPoint !== '') ? $mountPoint . '/' .  $c['path'] : $c['path'];
 				if ($c['type'] === 'dir') {
-					$dirList[] = substr($c['path'], strlen("files"));
+					$dirList[] = substr($path, strlen("files"));
 				} else {
-					$result[] = substr($c['path'], strlen("files"));
+					$result[] = substr($path, strlen("files"));
 				}
 			}
 
